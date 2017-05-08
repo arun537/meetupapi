@@ -23,7 +23,7 @@ body {
 }
 
 .container {
-  max-width: 400px;
+  max-width:450px;
   width: 100%;
   margin: 0 auto;
   position: relative;

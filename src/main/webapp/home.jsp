@@ -12,70 +12,96 @@
 <title>Insert title here</title>
 <link href='http://fonts.googleapis.com/css?family=Oswald'
 	rel='stylesheet' type='text/css'>
-<link href="css/home.css" rel="stylesheet">
+
+<link href='css/admin.css' rel='stylesheet' type='text/css'>
 </head>
 <body>
-	<div class="intro">
-		<h3>
-			Welcome<%=(((UserDao) (session.getAttribute("user"))).getUserName())%></h3>
-	</div>
-	<form action="LogoutServlet" method="post">
-		<span style="margin-left: 1180px; margin-top: 20px">
-		 <input class='button' type="submit" value="logout">
+	<div class="main">
+		<div>
+			<h3>
+				Welcome      <%=(((UserDao) (session.getAttribute("user"))).getUserName())%></h3>
+		</div>
+		<span>
+			<form action="LogoutServlet" method="post">
+				<span style="margin-left: 1180px; margin-top: 20px"> <input
+					class='button' type="submit" name="Logout" value="logout">
+				</span>
+			</form>
+		</span> <span>
+			<form action="requestTechTalk.jsp">
+					<input type="submit"
+					value="Request For New TechTalk" name="Request For New TechTalk">
+			</form>
 		</span>
-	</form>
-	<div id="container">
-		<%
-			HttpSession session2 = request.getSession();
-			UserDao user =(UserDao) session2.getAttribute("user");
-			ResultSet set = HomePageHelper.getTechTalkResultSet();
-			while (set.next()) {
+		<div>
+			<table>
+				<thead>
+					<tr>
+						<th>Title</th>
+						<th>Description</th>
+						<th>Presentor</th>
+						<th>Date</th>
+						<th>option</th>
+					</tr>
+				</thead>
+				<%
+					HttpSession session2 = request.getSession();
+					UserDao user = (UserDao) session2.getAttribute("user");
+					ResultSet set = HomePageHelper.getTechTalkResultSet();
+					while (set.next()) {
 
-				TechTalkDetails techmodel = new TechTalkDetails();
-				techmodel.setTechTalkId(set.getInt(1));
-				techmodel.setTitle(set.getString(2));
-				techmodel.setDescription(set.getString(3));
-				techmodel.setPresentor(set.getString(4));
-				techmodel.setTechTalkDate(set.getDate(5));
-		%>
+						TechTalkDetails techmodel = new TechTalkDetails();
+						techmodel.setTechTalkId(set.getInt(1));
+						techmodel.setTitle(set.getString(2));
+						techmodel.setDescription(set.getString(3));
+						techmodel.setPresentor(set.getString(4));
+						techmodel.setTechTalkDate(set.getDate(5));
+				%>
 
-		<div class="pricetab">
-			<h1><%=techmodel.getPresentor()%></h1>
-			<h1><%=techmodel.getTitle()%></h1>
-			<div class="price">
-				<h1><%=techmodel.getTechTalkDate()%></h1>
-			</div>
-			<div class="infos">
-				<h1><%=techmodel.getDescription()%></h1>
-			</div>
-			<% if(!RegisterationServletHelper.isRegisteredAlready(techmodel.getTechTalkId(), user.getEmailId())){%>
-			<div class="pricefooter">
+				<tr>
+					<td><strong><%=techmodel.getTitle()%>></strong></td>
+					<td><%=techmodel.getDescription()%></td>
+					<td><%=techmodel.getPresentor()%></td>
+					<td><%=techmodel.getTechTalkDate()%></td>
 
 
-				<form action="RegisterationServlet" method="post">
-					<button class="button" type="submit" name="registerButton"
-						value=<%=techmodel.getTechTalkId() %>>register</button>
-				</form>
-			</div>
 
-			<%}else{%>
-			<div class="pricefooter">
-				<div class="button">
-					<input class="button" name="registerButton" disabled="disabled">Already
-					registered
-					</button>
-				</div>
-			</div>
 
-			<%	} %>
+					<%
+						if (!RegisterationServletHelper.isRegisteredAlready(techmodel.getTechTalkId(), user.getEmailId())) {
+					%>
+
+
+					<td>
+						<form action="RegisterationServlet" method="post">
+							<button  type="submit" name="registerButton"
+								value=<%=techmodel.getTechTalkId()%>>register</button>
+						</form>
+					</td>
+
+
+					<%
+						} else {
+					%>
+
+					<td><button  name="registerButton"
+						disabled="disabled">Already registered</td>
+
+
+					<%
+						}
+					%>
+
+
+
+
+					<%
+						}
+					%>
+				</tr>
+			</table>
 
 		</div>
-	</div>
-
-
-	<%
-			}
-		%>
 	</div>
 </body>
 </html>
