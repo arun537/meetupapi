@@ -26,8 +26,8 @@
 						required>
 				</fieldset>
 				<fieldset>
-					<input placeholder="Presentor Name" type="text" name="presentor" value=<%=(((UserDao) (session.getAttribute("user"))).getUserName()) %> tabindex="3"
-						required disabled="disabled">
+					<input placeholder="Presentor Name" type="text" name="presentor"  tabindex="3"
+						required >
 				</fieldset>
 				<fieldset>
 					<input placeholder="Date for TechTalk" name="techtalkdate" type="date" tabindex="4"
