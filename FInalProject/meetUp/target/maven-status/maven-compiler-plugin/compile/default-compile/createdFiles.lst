@@ -1,0 +1,7 @@
+com\atmecs\cofiguration\MeetUPIntializer.class
+com\atmecs\services\UserService.class
+com\atmecs\dao\UserDao.class
+com\atmecs\cofiguration\ApplicationConfiguration.class
+com\atmecs\models\User.class
+com\atmecs\cofiguration\MeetUpConfiguration.class
+com\atmecs\controllers\UserController.class
