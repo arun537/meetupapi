@@ -15,4 +15,10 @@ public class UserLoginService {
 		System.out.println(user+"in user isExist service");
 		return loginDao.isUserExistDao(user);
 	}
+	public User getUserByName(String email){
+		User tempUser = loginDao.getUserByNameDao(email);
+		if(tempUser!=null)
+			return tempUser;
+		return null;
+	}
 }

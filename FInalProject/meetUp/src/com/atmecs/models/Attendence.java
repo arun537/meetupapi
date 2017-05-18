@@ -2,11 +2,14 @@ package com.atmecs.models;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+
 @Entity
 public class Attendence {
 	@Id
 	String comkey;
-	int userid,meetupid;
+
+	int userid;
+	int meetupid;
 	public String getComkey() {
 		return comkey;
 	}

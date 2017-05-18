@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.atmecs.models.Message;
 import com.atmecs.models.User;
 import com.atmecs.services.UserRegisterService;
 
@@ -16,9 +17,12 @@ public class UserRegisterController {
 	@Autowired
 	private UserRegisterService userService;
 	@RequestMapping(value="/registerUser",method=RequestMethod.POST, headers="Accept=application/json")
-	public void registerUser(@RequestBody User user){
+	public Message registerUser(@RequestBody User user){
 		System.out.println("in user register dao");
 		userService.registerUserService(user);
+		Message message = new Message();
+		message.setMessage("user registerd sucessfully");
+		return message;
 	}
 	
 	public void LoginUser(@RequestBody User User){

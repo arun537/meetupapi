@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.atmecs.dao.MeetUpDao;
 import com.atmecs.models.MeetUpPojo;
+import com.atmecs.models.Message;
 
 @Service
 public class MeetUpService {
@@ -17,13 +18,19 @@ public class MeetUpService {
 	public void addMeetUpService(MeetUpPojo meetUp){
 		meetUpDao.addMeetUp(meetUp);
 	}
-	public String deleteMeetUpService(int meetUpId){
+	public Message deleteMeetUpService(int meetUpId){
 		MeetUpPojo tempMeetUp = meetUpDao.getMeetUp(meetUpId);
+		Message message = new Message();
 		if(meetUpDao.isExistMeetUp(meetUpId)){
 		meetUpDao.deleteMeetUp(tempMeetUp);
-		return "deleted entrry with id="+meetUpId;
+		message.setMessage("deleted entrry with id="+meetUpId);
+		return message;
 		}
-		else return "no entry on this Id";
+		
+		else{
+			message.setMessage("no entry on this Id");
+			return message;
+		}
 		
 	}
 	public void updateMeetUpService(MeetUpPojo meetUp){
@@ -39,4 +46,8 @@ public class MeetUpService {
 			return meetUpTemp;
 		else return null;
 	}
+	public void deleteAttendence(int meetUpId){
+	meetUpDao.deleteAttendenceDao(meetUpId);
+	}
+	
 }

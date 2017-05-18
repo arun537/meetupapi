@@ -63,4 +63,11 @@ public class MeetUpDao {
 		}
 		return null;
 	}
+	public void deleteAttendenceDao(int meetUpId){
+		Session session = sf.getCurrentSession();
+		Query qry = session.createQuery("delete from Attendence where meetupid=:meetupid");
+		qry.setInteger("meetupid", meetUpId);
+		qry.executeUpdate();
+	}
+	
 }

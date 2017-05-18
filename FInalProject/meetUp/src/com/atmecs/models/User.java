@@ -1,5 +1,6 @@
 package com.atmecs.models;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,13 +15,13 @@ public class User {
 	@Id@GeneratedValue
 	int userid;
 	@NotNull(message="email is empty")
-	
 	String email;
 	@NotNull(message="password is empty")
 	String password;
 	String company,technicalcompatibility,companyAddress;
 	int experience;
 	long mobileNumber; 
+
 	public User() {
 		super();
 	}
@@ -78,6 +79,8 @@ public class User {
 	public void setMobileNumber(long mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
+	
+	
 	@Override
 	public String toString() {
 		return "User [userId=" + userid + ", email=" + email + ", password=" + password + ", company=" + company

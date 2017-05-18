@@ -28,7 +28,12 @@ public class UserLoginDao {
 			 return true;
 		 }
 		 else return false;
-		 
-		
+	}
+	
+	public User getUserByNameDao(String email){
+		Session session = sf.getCurrentSession();
+		Query qry = session.createQuery("from User where email=:email");
+		qry.setString("email", email);
+		return (User)qry.uniqueResult();
 	}
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.atmecs.models.MeetUpPojo;
+import com.atmecs.models.Message;
 import com.atmecs.services.MeetUpService;
 
 @RestController
@@ -22,8 +23,9 @@ public class MeetUpController {
 		meetUpService.addMeetUpService(meetUp);
 	}
 	@RequestMapping(value="/meetup/{meetUpId}", method=RequestMethod.DELETE, headers="Accept=application/json")
-	public String deleteMeetUpController(@PathVariable int meetUpId){
+	public Message deleteMeetUpController(@PathVariable int meetUpId){
 		System.out.println("in delete meetup");
+		meetUpService.deleteAttendence(meetUpId);
 		return meetUpService.deleteMeetUpService(meetUpId);
 	}
 	@RequestMapping(value="/meetup", method=RequestMethod.PUT, headers="Accept=application/json")
@@ -39,5 +41,5 @@ public class MeetUpController {
 	@RequestMapping(value="/getMeetUpByTitle/{title}", method=RequestMethod.GET, headers="Accept=application/json")
 	public MeetUpPojo getMeetUpByName(@PathVariable String title){
 		return meetUpService.getMeetUpService(title);
-	}	
+	}
 }
