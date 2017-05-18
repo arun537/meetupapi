@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!-- Load AngularJS -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/ngstorage/0.3.6/ngStorage.min.js"></script>
+		<script type="text/javascript">
+			var app = angular.module("loginUser",["ngStorage"]);
+	
+				app.controller("loginUserController", function($scope,$http,$sessionStorage){
+					
+					$scope.message = "";
+					
+					$scope.form = {
+						email : "",
+						password : "",
+						company : "",
+						comapnyAddress : "",
+						experience : "",
+						mobileNumber : "",
+						technicalcompatibility : ""
+					};
+					
+					$scope.submitformregister = function(){
+							 $http({
+								 method : "POST",
+								 url : "http://localhost:8080/meetUp/registerUser",
+							data : angular.toJson($scope.form),
+							headers :{
+								'Content-Type' : 'application/json'
+							}
+						}).then(_success, _error);
+					};	
+					
+					
+				       function _success(response) {
+				    	   $scope.message = response.data;
+				    	   alert($scope.message.message+"checking sessionscope"+sessionStorage.getItem("userid"));
+				    		
+				    	  // $window.location.href = "http://localhost:8080/meetUpFront/register.html";  
+		                }
+		                function _error(response) {
+		                    console.log(response.statusText);
+		                }
+		                function _clearForm() {
+		                    $scope.form.password = "";
+		                    $scope.form.username = "";
+		                    $scope.form.company = "";
+		                    $scope.form.companyAddress = "";
+		                    $scope.form.experience = "";
+		                    $scope.form.technicalcompatibility = "",
+		                    $scope.form.mobileNumber = "";
+		                   }   
+			});
+</script>
+
+
+
+<body ng-app = "loginUser"  ng-controller = "loginUserController">
+	
+	<form ng-submit = submitformregister()>
+			<table>
+                <tr>
+                    <td>email</td>
+                    <td><input type="text" ng-model="form.email" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td><input type="password" ng-model="form.password" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>company</td>
+                    <td><input type="text" ng-model="form.company" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>companyAddress</td>
+                    <td><input type="text" ng-model="form.companyAddress" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>TechnicalCompatibility</td>
+                    <td><input type="text" ng-model="form.technicalcompatibility" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>experience</td>
+                    <td><input type="number" ng-model="form.experience" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>mobileNumber</td>
+                    <td><input type="number" ng-model="form.mobileNumber" size="60" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="Submit" /></td>
+                </tr>
+           </table>     
+	</form>
+	
+	
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>
+            Admin Home Page
+        </title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!-- Load AngularJS -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            var app = angular.module("UserManagement", []);
+         
+            //Controller Part
+            app.controller("UserManagementController", function($scope, $http) {
+         
+                //Initialize page with default data which is blank in this example
+                $scope.meetups = [];
+                $scope.form = {
+                    userid : -1,
+                    title : "",
+                    presenter : "",
+                    description : "",
+					chiefGuest : "",
+					date : "",
+					startTime : "",
+					endTime : ""
+				};
+         
+                //Now load the data from server
+                _refreshPageData();
+         
+                //HTTP POST/PUT methods for add/edit employee
+                $scope.submitMeetUp = function() {
+         
+                    var method = "";
+                    var url = "";
+                    if ($scope.form.id == -1) {
+                        //Id is absent so add employee - POST operation
+                        method = "POST";
+                        url = 'http://localhost:8080/webapi/admin/meetups/';
+						
+                    } else {
+                        //If Id is present, it's edit operation - PUT operation
+                        method = "PUT";
+                        url = 'http://localhost:8080/webapi/admin/meetups/' + $scope.meetUp.Id;
+                    }
+         
+                    $http({
+                        method : method,
+                        url : url,
+                        data : angular.toJson($scope.form),
+                        headers : {
+                            'Content-Type' : 'application/json',
+							'Authorization' : 'Basic YWRtaW5AYXRtZWNzLmNvbTphZG1pbg=='
+                        }
+                    }).then( _success, _error );
+                };
+         
+                //HTTP DELETE- delete employee by Id
+                $scope.removeMeetUp = function(meetUp) {
+                    $http({
+                        method : 'DELETE',
+                        url : 'http://localhost:8080/webapi/admin/meetups/' + meetUp.title ,
+						headers : {
+                            'Content-Type' : 'application/json',
+							'Authorization' : 'Basic YWRtaW5AYXRtZWNzLmNvbTphZG1pbg=='
+							}
+                    }).then(_success, _error);
+                };
+ 
+                //In case of edit employee, populate form with employee data
+                $scope.editMeetUp = function(meetUp) {
+                    $scope.form.title = meetUp.title;
+                    $scope.form.description = meetUp.description;
+                    $scope.form.date = meetUp.date;
+                    $scope.form.chiefGuest = meetUp.chiefGuest;
+					$scope.form.presenter = meetUp.presenter;
+					$scope.form.startTime = meetUp.startTime;
+					$scope.form.endTime = meetUp.endTime;
+                };
+				
+				 $scope.viewAttendees = function(meetUp) {
+                    $http({
+                        method : 'GET',
+                        url : 'http://localhost:8080/webapi/meetups/' + meetUp.title + '/guests' ,
+						headers : {
+                            'Content-Type' : 'application/json',
+							'Authorization' : 'Basic YWRtaW5AYXRtZWNzLmNvbTphZG1pbg=='
+							}
+                    }).then(function successCallback(response){
+						$scope.attendees = response.data;
+						_refreshPageData();
+					}, _error);
+                };
+         
+                /* Private Methods */
+                //HTTP GET- get all employees collection
+                function _refreshPageData() {
+                    $http({
+                        method : 'GET',
+                        url : 'http://localhost:8080/webapi/meetups/'
+                    }).then(function successCallback(response) {
+                        $scope.meetUps = response.data;
+                    }, function errorCallback(response) {
+                        console.log(response.statusText);
+                    });
+                }
+         
+                function _success(response) {
+                    _refreshPageData();
+                    _clearForm()
+                }
+         
+                function _error(response) {
+                    console.log(response.statusText);
+                }
+         
+                //Clear the form
+                function _clearForm() {
+                    $scope.form.date = "";
+                    $scope.form.description = "";
+                    $scope.form.presenter = "";
+                    $scope.form.title = "";
+					$scope.form.startTime = "";
+                    $scope.form.endTime = "";
+                    $scope.form.chiefGuest = ""
+                };
+            });
+        </script>
+        <style>
+            .button {
+                cursor: pointer;
+                color: blue;
+            }
+            td,th{
+                border: 1px solid gray;
+                width: 25%;
+                text-align: left;
+            }
+            table {
+                width: 600px;
+            }
+        </style>
+    <head>
+    <body ng-app="UserManagement" ng-controller="UserManagementController">
+         <h1>
+            Admin Home Page
+        </h1>
+ <div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-8">
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Presnter</th>
+                <th>Description</th>
+				<th>Chief Guest</th>
+                <th>Date</th>
+                <th>Start</th>
+                <th>End</th>
+            </tr>
+ 
+            <tr ng-repeat="meetUp in meetUps">
+                <td>{{ meetUp.title }}</td>
+                <td>{{ meetUp.presenter }}</td>
+                <td>{{ meetUp.description }}</td>
+				<td>{{ meetUp.chiefGuest }}</td>
+				<td>{{ meetUp.date }}</td>
+				<td>{{ meetUp.startTime }}</td>
+				<td>{{ meetUp.endTime }}</td>
+                <td><a ng-click="editMeetUp( meetUp )" class="button">Edit</a> | <a ng-click="removeMeetUp( meetUp )" class="button">Remove</a> | <a ng-click="viewAttendees( meetUp )" class="button">View Attendees</a></td>
+            </tr>
+ 
+        </table>
+		</div>
+		<div class="col-sm-4">
+		<h3>List of Attendees</h3>
+		<ul ng-repeat="attendee in attendees">
+			<li>{{attendee.name}}</li>
+		</ul>	
+		</div>	
+	</div>
+</div>	
+        <h2>Add/Edit MeetUp</h2>
+ 
+        <form ng-submit="submitMeetUp()">
+            <table>
+                <tr>
+                    <td>Title</td>
+                    <td><input type="text" ng-model="form.title" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>Presenter</td>
+                    <td><input type="text" ng-model="form.presenter" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>Description</td>
+                    <td><input type="text" ng-model="form.description" size="60" /></td>
+                </tr>
+				<tr>
+                    <td>Chief Guest</td>
+                    <td><input type="text" ng-model="form.chiefGuest" size="60" /></td>
+                </tr>
+				<tr>
+                    <td>Date</td>
+                    <td><input type="text" ng-model="form.date" size="60" /></td>
+                </tr>
+				<tr>
+                    <td>Start Time</td>
+                    <td><input type="text" ng-model="form.startTime" size="60" /></td>
+                </tr>
+				<tr>
+                    <td>End Time</td>
+                    <td><input type="text" ng-model="form.endTime" size="60" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="Submit" /></td>
+                </tr>
+            </table>
+        </form>
+		<br\>
+		
+    </body>
+</html>

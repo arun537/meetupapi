@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>
+            Admin Home Page
+        </title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!-- Load AngularJS -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		
+        <script type="text/javascript">
+       		 var app = angular.module("userPortal", []);
+       		 
+       		app.controller("userPortalController", function($scope, $http) {
+       			
+       			_refreshPage(){
+       				_getlist();
+       			}
+       			
+       			$scope.meetUplist = [];
+       			
+       			_getlist();
+       			
+       			function _getlist(){
+       				$http({
+       					method: "GET",
+       					url : "http://localhost:8080/meetUp/meetup/"
+       					
+       				}).then(function successcallback(response){
+       						$scope.meetUplist = response.data;
+       				});
+       			};
+       			
+       			$scope.deleteMeetUp = function (meetUpId){
+       				$http({
+       					method : "DELETE",
+       					url : "http://localhost:8080/meetUp/meetup/"+meetUpId,
+       				}).then(function successcallback(response){
+       					var message = response.data;
+       					alert(message.message);
+       					_refreshpage();
+       				});
+       			};
+       			
+       		});
+		</script>
+	</head>
+	<body ng-app="userPortal" ng-controller="userPortalController">
+	<table border="2">
+		<thead>
+		<tr>
+			<td>Title</td>
+			<td>Presentor</td>
+			<td>Description</td>
+			<td>Chief Guest</td>
+			<td>Date</td>
+			<td>Start Time</td>
+			<td>End Time</td>
+			<td>operation</td>
+		</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat = "meetUp in meetUplist">
+				<td>{{meetUp.title}}</td>
+				<td>{{meetUp.presentor}}</td>
+				<td>{{meetUp.description}}</td>
+				<td>{{meetUp.guest}}</td>
+				<td>{{meetUp.date | date: 'yyyy/MM/dd'}}</td>
+				<td>{{meetUp.starttime}}</td>
+				<td>{{meetUp.endtime}}</td>
+				<td><button ng-click="deleteMeetUp(meetUp.meetupid)">delete</button><button onclick=></button></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	</body>
+</html>		

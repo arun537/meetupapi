@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>
+            Admin Home Page
+        </title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!-- Load AngularJS -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+       		 var app = angular.module("UserManagement", []);
+       		 
+       		app.controller("UserManagementController", function($scope, $http) {
+       			
+       			
+       			
+       			$scope.userlist = [];
+       			
+       			_getlist();
+       			
+       			function _getlist(){
+       				$http({
+       					method: "GET",
+       					url : "http://localhost:8080/meetUp/getUser"
+       					
+       				}).then(function successcallback(response){
+       						$scope.userlist = response.data;	
+       				});
+       			};
+       		});
+		</script>
+	</head>
+	<body ng-app="UserManagement" ng-controller="UserManagementController">
+	<table border="2">
+		<thead>
+		<tr>
+			<td>userId</td>
+			<td>email</td>
+			<td>password</td>
+			<td>company</td>
+			<td>companyAddress</td>
+			<td>TechnicalCompatibility</td>
+			<td>MobileNumber</td>
+			<td>Experience</td>
+		</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat = "user in userlist">
+				<td>{{user.userid}}</td>
+				<td>{{user.email}}</td>
+				<td>{{user.password}}</td>
+				<td>{{user.company}}</td>
+				<td>{{user.companyAddress}}</td>
+				<td>{{user.technicalcompatibility}}</td>
+				<td>{{user.mobileNumber}}</td>
+				<td>{{user.experience}}</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	</body>
+</html>		
